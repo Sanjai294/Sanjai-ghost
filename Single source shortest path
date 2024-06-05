@@ -1,0 +1,104 @@
+#include <iostream>
+#include <vector>
+#include <limits.h> // for INT_MAX
+
+using namespace std;
+
+class path {
+private:
+    int n;
+    vector<vector<int>> cost;
+    vector<int> dist;
+    vector<bool> s;
+    int v;
+
+public:
+    void getdata();
+    void spath();
+    void display();
+    void distance();
+};
+
+void path::getdata() {
+    cout << "\n\t\t**** SINGLE SOURCE SHORTEST PATH**** ";
+    cout << "\n\n\nEnter the number of nodes: ";
+    cin >> n;
+
+    cost.resize(n, vector<int>(n));
+    dist.resize(n);
+    s.resize(n);
+
+    cout << "\nIf there is no edge then enter 9999\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == j) {
+                cost[i][j] = 0;
+            } else {
+                cout << "\nEnter the cost between " << i + 1 << " and " << j + 1 << " : ";
+                cin >> cost[i][j];
+                if (cost[i][j] == 0) {
+                    cost[i][j] = 9999;
+                }
+            }
+        }
+    }
+}
+
+void path::display() {
+    cout << "The Adjacency Matrix\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << cost[i][j] << "\t";
+        }
+        cout << "\n";
+    }
+}
+
+void path::spath() {
+    cout << "\nEnter the source vertex (1 to " << n << "): ";
+    cin >> v;
+    v--; // Adjust to zero-based index
+
+    for (int i = 0; i < n; i++) {
+        s[i] = false;
+        dist[i] = cost[v][i];
+    }
+    s[v] = true;
+    dist[v] = 0;
+
+    for (int num = 1; num < n; num++) {
+        int min = 9999, u = -1;
+        for (int j = 0; j < n; j++) {
+            if (!s[j] && dist[j] < min) {
+                min = dist[j];
+                u = j;
+            }
+        }
+        if (u == -1) {
+            break; // No more reachable nodes
+        }
+        s[u] = true;
+
+        for (int w = 0; w < n; w++) {
+            if (!s[w] && (dist[u] + cost[u][w] < dist[w])) {
+                dist[w] = dist[u] + cost[u][w];
+            }
+        }
+    }
+}
+
+void path::distance() {
+    for (int w = 0; w < n; w++) {
+        cout << "Distance between " << v + 1 << " to " << w + 1 << " is " << dist[w] << "\n";
+    }
+}
+
+int main() {
+    path p;
+    p.getdata();
+    p.display();
+    p.spath();
+    p.distance();
+    return 0;
+}
+

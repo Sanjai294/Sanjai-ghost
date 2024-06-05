@@ -1,0 +1,68 @@
+QUICK SORT
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Quick {
+public:
+    int j, i, n, a[20];
+    void get() {
+        cout << "\n\t...<<<QUICK SORT>>>...";
+        cout << "\n\tEnter number of elements: ";
+        cin >> n;
+        cout << "\n\tEnter the elements: ";
+        for (i = 0; i < n; i++) {
+            cin >> a[i];
+        }
+    }
+    void quick_sort(int p, int q) {
+        if (p < q) {
+            j = part(a, p, q);
+            quick_sort(p, j - 1);
+            quick_sort(j + 1, q);
+        }
+    }
+    int part(int a[], int low, int high) {
+        int v = a[low], i = low, j = high;
+        do {
+            do {
+                i++;
+            } while (a[i] < v && i <= high);
+            do {
+                j--;
+            } while (a[j] > v);
+            if (i < j) {
+                interchange(a, i, j);
+            }
+        } while (i < j);
+        a[low] = a[j];
+        a[j] = v;
+        return j;
+    }
+    void interchange(int a[], int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+    void disp() {
+        cout << "\nThe sorted array:";
+        for (i = 0; i < n; i++) {
+            cout << " " << a[i];
+        }
+        cout << endl;
+    }
+    void complex(int n) {
+        cout << "\n\tTime Complexity: O(n log n)";
+        cout << "\n\tSpace Complexity: O(log n)";
+    }
+};
+
+int main() {
+    Quick q;
+    q.get();
+    q.quick_sort(0, q.n - 1);
+    q.disp();
+    q.complex(q.n);
+    return 0;
+}

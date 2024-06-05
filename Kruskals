@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Kruskals {
+    vector<int> parent, x, y, z;
+    vector<vector<int>> cost, t;
+    int mincost, n1;
+
+public:
+    Kruskals(int n) : parent(n, -1), cost(n, vector<int>(n, 9999)), mincost(0) {
+        x.resize(n * n);
+        y.resize(n * n);
+        z.resize(n * n);
+        t.resize(n, vector<int>(2));
+    }
+
+    void kruskal(int n);
+    int find1(int i);
+    void union1(int x1, int x2);
+};
+
+int main() {
+    int n;
+    cout << "\nKRUSKAL'S ALGORITHM\n";
+    cout << "\nEnter the number of nodes: ";
+    cin >> n;
+    Kruskals kr(n);
+    kr.kruskal(n);
+    return 0;
+}
+
+void Kruskals::kruskal(int n) {
+    int k = 1;
+    cout << "\nIf no edge exists enter 9999\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            cout << "\nThe cost between " << i + 1 << " and " << j + 1 << " : ";
+            cin >> cost[i][j];
+            if ((i < j) && (cost[i][j] != 9999)) {
+                x[k] = i;
+                y[k] = j;
+                z[k] = cost[i][j];
+                k++;
+            }
+        }
+    }
+
+    vector<int> idx(k - 1);
+    for (int i = 0; i < k - 1; i++) {
+        idx[i] = i + 1;
+    }
+
+    sort(idx.begin(), idx.end(), [&](int a, int b) {
+        return z[a] < z[b];
+    });
+
+    n1 = k - 1;
+    int r = 1, i = 0;
+    while ((i < n - 1) && (r <= n1)) {
+        int u = x[idx[r - 1]];
+        int v = y[idx[r - 1]];
+        int j = find1(u);
+        int k = find1(v);
+        if (j != k) {
+            i++;
+            t[i][0] = u;
+            t[i][1] = v;
+            mincost += cost[u][v];
+            union1(j, k);
+        }
+        r++;
+    }
+
+    cout << "\nMINIMUM SPANNING TREE\n\n";
+    for (int i = 1; i < n; i++) {
+        cout << "\t" << t[i][0] + 1 << " -> " << t[i][1] + 1 << "\n";
+    }
+    cout << "\n\nMinimum Cost is = " << mincost << "\n";
+}
+
+int Kruskals::find1(int i) {
+    if (parent[i] < 0) {
+        return i;
+    } else {
+        parent[i] = find1(parent[i]);
+        return parent[i];
+    }
+}
+
+void Kruskals::union1(int x1, int x2) {
+    parent[x1] = x2;
+}

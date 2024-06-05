@@ -1,0 +1,83 @@
+MERGE SORT
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Merg {
+public:
+    int low, high, mid, i, a[20], n, b[20];
+    void getdata();
+    void mergesort(int, int);
+    void merge(int, int, int);
+    void display();
+    void complex(int);
+};
+
+void Merg::getdata() {
+    cout << "\nEnter the number of array elements: ";
+    cin >> n;
+    cout << "\nEnter the array elements: ";
+    for (i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+}
+
+void Merg::mergesort(int low, int high) {
+    if (low < high) {
+        mid = (low + high) / 2;
+        mergesort(low, mid);
+        mergesort(mid + 1, high);
+        merge(low, mid, high);
+    }
+}
+
+void Merg::merge(int low, int mid, int high) {
+    int h = low, i = low, j = mid + 1, k;
+    while ((h <= mid) && (j <= high)) {
+        if (a[h] <= a[j]) {
+            b[i] = a[h];
+            h++;
+        } else {
+            b[i] = a[j];
+            j++;
+        }
+        i++;
+    }
+    if (h > mid) {
+        for (k = j; k <= high; k++) {
+            b[i] = a[k];
+            i++;
+        }
+    } else {
+        for (k = h; k <= mid; k++) {
+            b[i] = a[k];
+            i++;
+        }
+    }
+    for (k = low; k <= high; k++) {
+        a[k] = b[k];
+    }
+}
+
+void Merg::display() {
+    cout << "\nThe sorted array is:";
+    for (i = 0; i < n; i++) {
+        cout << a[i] << " ";
+    }
+    cout << endl;
+}
+
+void Merg::complex(int n) {
+    cout << "\nTime Complexity is O(" << n * log2(n) << ")" << endl;
+    cout << "Space Complexity is O(" << n << ")" << endl;
+}
+
+int main() {
+    Merg m;
+    m.getdata();
+    m.mergesort(0, m.n - 1);
+    m.display();
+    m.complex(m.n);
+    return 0;
+}

@@ -1,0 +1,94 @@
+PRIM'S ALGORITHM 
+
+#include <iostream>
+using namespace std;
+
+class Prims {
+    int i, j, k, l, near1[50];
+    int cost[50][50], t[50][50];
+    int mincost;
+
+public:
+    void prim(int n);
+};
+
+// Gets the input and calculates the minimum spanning tree
+void Prims::prim(int n) {
+    int min = 9999; // Initialize min to a large number
+    cout << "\nIf there is no edge, then enter 9999\n";
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            if (i != j && j >= i) { // Adjust condition to prevent duplicate input prompts
+                cout << "\nThe cost between " << i << " and " << j << " : ";
+                cin >> cost[i][j];
+                cost[j][i] = cost[i][j];
+                if (cost[i][j] < min) {
+                    min = cost[i][j];
+                    k = i;
+                    l = j;
+                }
+            } else if (i == j) {
+                cost[i][j] = 9999; // No self-loops
+            }
+        }
+    }
+
+    // Displays the adjacency matrix of the graph
+    cout << "\nThe adjacency matrix is:\n";
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            cout << cost[i][j] << "\t";
+        }
+        cout << "\n";
+    }
+
+    // Finds the minimum spanning tree and its minimum cost
+    mincost = cost[k][l];
+    t[1][1] = k;
+    t[1][2] = l;
+    for (i = 1; i <= n; i++) {
+        if (cost[i][l] < cost[i][k]) {
+            near1[i] = l;
+        } else {
+            near1[i] = k;
+        }
+    }
+    near1[k] = 0;
+    near1[l] = 0;
+
+    for (i = 2; i <= n - 1; i++) {
+        min = 9999;
+        for (int a = 1; a <= n; a++) {
+            if ((near1[a] != 0) && (min > cost[a][near1[a]])) {
+                min = cost[a][near1[a]];
+                j = a;
+            }
+        }
+        t[i][1] = j;
+        t[i][2] = near1[j];
+        mincost += min;
+        near1[j] = 0;
+        for (k = 1; k <= n; k++) {
+            if ((near1[k] != 0) && (cost[k][near1[k]] > cost[k][j])) {
+                near1[k] = j;
+            }
+        }
+    }
+
+    // Prints the edges in the minimum spanning tree
+    cout << "\n\nMinimum Cost is: " << mincost;
+    cout << "\n\nThe Minimum Spanning Tree is:\n";
+    for (i = 1; i <= n - 1; i++) {
+        cout << t[i][1] << " -> " << t[i][2] << "\n";
+    }
+}
+
+int main() {
+    int n;
+    Prims pr;
+    cout << "\nPRIMS ALGORITHM\n";
+    cout << "\nEnter the number of vertices: ";
+    cin >> n;
+    pr.prim(n);
+    return 0;
+}

@@ -1,0 +1,81 @@
+HAMILTONIAN CYCLE    
+                                                                                                                             #include <iostream> 
+#include <vector>
+
+class Hamal {
+public:
+    int n;
+    std::vector<int> x;
+    std::vector<std::vector<int>> g;
+
+    void get() {
+        char f;
+        std::cout << "\nEnter the number of nodes: ";
+        std::cin >> n;
+        g.resize(n + 1, std::vector<int>(n + 1, 0));
+        x.resize(n + 1, 0);
+
+        std::cout << "\nEnter the path:\n";
+        for (int i = 1; i <= n; ++i) {
+            for (int j = i + 1; j <= n; ++j) {
+                std::cout << "Is there an edge between " << i << " and " << j << " (t for true, f for false)? ";
+                std::cin >> f;
+                if (f == 't') {
+                    g[i][j] = g[j][i] = 1;
+                } else {
+                    g[i][j] = g[j][i] = 0;
+                }
+            }
+        }
+        x[1] = 1;
+    }
+
+    void hamil(int k) {
+        if (k > n) {
+            for (int i = 1; i <= n; ++i) {
+                std::cout << x[i] << "\t";
+            }
+            std::cout << x[1] << "\n\n"; // To show the cycle back to the starting node
+            return;
+        }
+
+        while (true) {
+            if (!next(k)) return;
+            if (k == n) {
+                for (int i = 1; i <= n; ++i) {
+                    std::cout << x[i] << "\t";
+                }
+                std::cout << x[1] << "\n\n"; // To show the cycle back to the starting node
+            } else {
+                hamil(k + 1);
+            }
+        }
+    }
+
+    bool next(int k) {
+        int j, p, q;
+        while (true) {
+            x[k] = (x[k] + 1) % (n + 1);
+            if (x[k] == 0) return false;
+            p = x[k - 1];
+            q = x[k];
+            if (g[p][q] != 0) {
+                for (j = 1; j < k; ++j) {
+                    if (x[j] == x[k]) break;
+                }
+                if (j == k) {
+                    if (k < n || (k == n && g[x[n]][x[1]] != 0)) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+};
+
+int main() {
+    Hamal h;
+    h.get();
+    h.hamil(2);
+    return 0;
+}

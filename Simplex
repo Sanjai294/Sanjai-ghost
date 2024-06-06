@@ -1,0 +1,19 @@
+SIMPLEX METHOD
+
+# Load the necessary library
+library("linprog")
+
+# Define the objective function coefficients
+c <- c(3, 2)
+
+# Define the right-hand side of the constraints
+b <- c(30, 60)
+
+# Define the constraint matrix
+A <- rbind(c(1, 2), c(5, 1))
+
+# Solve the linear programming problem
+res <- solveLP(c, b, A, maximum=TRUE)
+
+# Print the result
+print(res)

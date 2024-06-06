@@ -1,0 +1,24 @@
+TRANSPORTATION PROBLEM
+
+library(lpSolve)
+
+# Define the cost matrix
+costs <- matrix(c(700, 800, 900,
+                  900, 800, 700), nrow = 2, byrow = TRUE)
+
+# Define the row constraints (supply constraints)
+row.signs <- rep("<=", 2) 
+row.rhs <- c(12, 15)
+
+# Define the column constraints (demand constraints)
+col.signs <- rep(">=", 3)
+col.rhs <- c(10, 8, 9)
+
+# Solve the transportation problem
+lptrans <- lp.transport(costs, "min", row.signs, row.rhs, col.signs, col.rhs)
+
+# Output the solution matrix
+lptrans$solution
+
+# Output the objective value
+lptrans$objval

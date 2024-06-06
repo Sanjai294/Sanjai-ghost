@@ -1,0 +1,24 @@
+LINEAR PROGRAMMING PROBLEM
+
+library(lpSolve)
+
+# Define the objective function coefficients
+obj.fun <- c(20, 60)
+
+# Define the constraint matrix
+constr <- matrix(c(30, 20,
+                   5, 10,
+                   1, 1), ncol=2, byrow=TRUE)
+
+# Define the direction of the constraints
+constr.dir <- c("<=", "<=", ">=")
+
+# Define the right-hand side of the constraints
+rhs <- c(2700, 850, 95)
+
+# Solve the linear programming problem
+sol <- lp("max", obj.fun, constr, constr.dir, rhs, compute.sens=TRUE)
+
+# Output the solution
+sol
+sol$solution
